@@ -1,0 +1,1591 @@
+
+<br>
+</br>
+<br>
+</br>
+
+##LAMP总结
+<br>
+</br>
+
+
+### 1.  初识APACHE
+
+> 1. 主流静态web服务器:apache、nginx(现主流)
+
+> 2. 主流java动态web服务器:tomcat、resin
+
+> 3. PHP配合apache为模块；配合nginx为进程模式
+
+> 4. 多数公司以编译安装的方式安装,大公司自定义源码结合yum、rpm来进行安装
+
+<br>
+</br>
+     
+### 2.  架设APACHE
+
+>一、预编译配置
+>> 1. <mark>--prefix 安装目录</mark>
+>> 2. <mark>--enable-deflate</mark>     减少带宽，服务器端压缩
+>> 3. <mark>--enable-expires</mark>    客户端的缓存有效期
+>> 4.  <mark>--enable-headers</mark>激活https
+>> 5. <mark>--with-mpm</mark> 工作模式
+>> 6. <mark>--enable-modules=most<mark> 激活大部分模块
+>> 7.<mark>--enable-rewrite</mark> 激活重写功能
+
+>二、apachectl控制命令
+>>1. -t   检查语法错误
+>>2. -l    列出加载模块
+>>3. -M  列出哪些是动态模块哪些是静态模块
+>>4. graceful 平滑重启
+
+<br>
+</br>
+
+### 3.  部署第一个站点与目录结构
+> 1.  apache主配置文件为:/安装目录/conf/httpd.conf
+
+> 2.  apache默认网站目录为:/安装目录/htdocs
+
+> 3. apache下的bin目录放置常用命令
+
+> 4. apache下的conf为主配置文件目录,extra为辅助配置目录:其中最主要的是<mark>httpd-vhost.conf</mark>,<mark>httpd-mpm.conf</mark>,<mark>httpd-default.conf</mark>
+
+> 5.original目录为原始配置文件目录用于恢复
+
+> 6.htdocs为默认站点目录
+
+
+
+<br>
+</br>
+### 4.  主配置文件、扩展配置文件的工作模式与修改并发数、修改版本号
+>  一、 主配置文件中的:
+>> 1. ServerRoot字段:服务的根目录
+
+>> 2. Listen 字段为监听端口,<mark>在配置不同端口的虚拟主机时使用</mark>
+
+>> 3. User & Group是apache使用用户,<mark>在更改网站目录权限后需要修改</mark>
+
+
+>>4. DocumentRoot是apache的默认网站目录
+
+
+>>5. <mark>目录权限字段，新添加网站必须添加此6行</mark>
+>>> <pre>\<Directory "网站目录"\>
+>>>     Options<mark>-</mark>Indexes FollowsymLinks 
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+  \</Directory >
+        
+>>>  <mark>"Options Indexes FollowsymLinks" 当  DirectoryIndex字段设置的默认首页与网站不同时首页则展示根目录，危险，需优化</mark>
+<br>
+</br>
+
+>>6.网站默认首页设置字段多个默认首页以<mark>空格</mark>分开
+>><pre>\<IfModule dir_module>
+     DirectoryIndex index.html index.php
+    \</IfModule>``</pre>
+    
+    
+>>7.虚拟主机配置文件开关
+>>``Include conf/extra/httpd-vhosts.conf``
+
+>>8.<mark>AddType application/ 添加文件类型支持(比如添加对.php类型动态网页请求)</mark>
+    
+<br>
+</br>
+
+> 二、扩展配置文件
+>>1.httpd-vhost.conf
+>>><pre>1.1：NameVirtualHost字段可以设置为基于IP或端口虚拟主机
+
+>>>1.2： DocumentRoot 字段设置网站文档目录
+
+>>>1.3： <mark>ServerName 设置网站域名</mark>
+
+>>>1.4： 多个主机有多个以上字段,并且主配置文件需要<mark>打开虚拟主机开关</mark>以及<mark>设置目录权限(6行)</mark></pre>
+
+>>2.httpd-mpm.conf
+>>><pre>1.1：pid锁文件
+>>>
+   	 PidFile "logs/httpd.pid"
+   		 	
+>>>1.2 mpm_prefork_module
+        MaxClients 并发字段
+
+>>>1.3 mpm_worker_module
+        MaxClients 并发字段</pre>
+>>3.apache工作模式
+>>> <pre>work模式
+父进程产生多个子进程对外服务，高并发不稳定
+
+>>>prefork模式
+以进程提供服务,相对稳定消耗资源</pre>
+
+>>4.httpd-default.conf
+>>> <pre>
+>>> Timeout 300                连接超时时间
+>>> AccessFileName .htaccess   伪静态使用的文件
+>>>ServerSignature On          可以修改这两项，隐藏版本号
+>>>ServerTokens Full
+>>> </pre>
+
+<br>
+</br>
+
+### 5.  虚拟主机配置
+
+> 添加虚拟主机3种类型
+>> 1. 域名
+>> 2. 端口
+>> 3. IP
+
+> 添加虚拟主机3要点:
+
+>> 1. 虚拟主机配置文件语法 （httpd-vhost.conf）
+>> 2. 主配置文件需要打开虚拟主机功能 （include） 
+>> 3. 主配置文件需要添加虚拟主机目录权限配置(6行)
+>> 4. 基于端口的虚拟主机需要在主配置文件中添加(Listen端口）
+
+<br>
+</br>
+
+### 6.  日志轮询、隐藏版本号
+>日志轮询将apache单一的日志文件切割为多个，方便备份和查看
+>>通常使用cronolog
+>>>在虚拟主机配置文件中
+>>>``CustomLog "|/usr/local/sbin/cronolog /app/logs/(日志存放目录)access_(your site)_%Y%m%d.log" combined``
+
+>隐藏版本号
+>>1.在httpd-default.conf中配置(Prod\Off)
+>>2.安装包中的ap_release.h、os.h文件中配置,然后在编译安装
+
+<br>
+</br>
+
+### 7.  安装MYSQL
+安装基本和Mysql安装篇相同，只有配置文件的不同
+
+<pre>./configure \
+--prefix=/application/mysql5.1.72 \
+--with-unix-socket-path=/application/mysql5.1.72/tmp/mysql.sock \
+--localstatedir=/application/mysql5.1.72/data \
+--enable-assembler \
+--enable-thread-safe-client \
+--with-mysqld-user=mysql \
+--with-big-tables \
+--without-debug \
+--with-pthread \
+--enable-assembler \
+--with-extra-charsets=complex \
+--with-readline \
+--with-ssl \
+--with-embedded-server \
+--enable-local-infile \
+--with-plugins=partition,innobase \
+--with-mysqld-ldflags=-all-static \
+--with-client-ldflags=-all-static
+</pre>
+
+<br>
+</br>
+### 8. APACHE与MYSQL、PHP整合
+> PHP与APACHE整合3要点
+>> 1. 检查mysql与apache是否安装正确
+>> 2. 安装php
+<pre>
+./configure \
+--prefix=/application/php5.3.27 \
+<mark>--with-apxs2=/application/apache/bin/apxs \ ------>为apache添加模块，这里添加php模块(php在apache中以模块方式使用)</mark>
+<mark>--with-mysql=/application/mysql \ </mark>
+--with-xmlrpc \
+--with-openssl \
+--with-zlib \
+--with-freetype-dir \
+--with-gd \
+--with-jpeg-dir \
+--with-png-dir \
+--with-iconv=/usr/local/libiconv \
+--enable-short-tags \
+--enable-sockets \
+--enable-zend-multibyte \
+--enable-soap \
+--enable-mbstring \
+--enable-static \
+--enable-gd-native-ttf \
+--with-curl \
+--with-xsl \
+--enable-ftp \
+--with-libxml-dir
+
+</pre>
+>>>2.1 ：安装必要的lib库,安装libiconv
+>>>2.2 ：<mark>选择配置文件(安装源文件中的\*.ini-*)拷贝到安装目录lib</mark>
+
+<br>
+</br>
+
+>> 3.与apache整合
+>>>3.1 ：检查libphp5模块是否添加
+>>>3.2 ：在主配置文件中添加对.php类型的请求x-httpd-php (.php .phtml)(x-httpd-php .php .phtm)
+>>>3.3 ：在主配置文件中添加对php首页的支持
+>>>3.4 ：修改主配置文件的apache默认用户
+>>>3.5 ：测试（<?php phpinfo(); ?>）
+
+>>整合总结: 
+>>>        (1)检查mysql与apache
+>>>        (2)添加对.php类型文件解析请求的支持
+>>>        (3)添加对php首页的支持
+
+<br>
+</br>
+<br>
+</br>
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+<br>
+</br>
+
+<br>
+</br>
+
+<br>
+</br>
+
+<br>
+</br>
+
+
+##第一章、初识APACHE
+### 1.HTTP 服务软件介绍
+>
+>1. <mark>apache</mark>   老牌，稳定市场占有率高
+
+>2. <mark>nginx</mark> 	 新星，国内较火 趋势很好
+
+>3. lighttpd	 没火，nginx之前很火，百度贴吧用
+
+>4. tengine 淘宝用,由nginx修改
+
+>5. <mark>tomcat</mark> java动态网站web服务器软件
+
+>6. <mark>resin</mark>  java动态网站web服务器软件
+
+
+
+<br>
+</br>
+<br>
+</br>
+
+
+### 2.主流web服务器
+
+
+>1. apache 中小型静态web服务主流
+
+>2. nginx  大网站使用，静态web主流服务器软件
+
+>3. lighttpd  静态web服务器，不温不火，解析效率高
+
+
+>4. IIS微软   (静态，asp,aspx)
+
+>5. tomcat 中小企业动态web服务主流java容器(jsp,do)
+
+>6. resin  大型企业web服务（百度用）互联网主流java容器
+
+>7. php(fcgi) 大中小企业php程序解析容器,php解析只能用这个
+
+>>1. php配合apache是以模块的方式存在
+>>2. 配合nginx，lighttpd；php是守护进程模式，FCGI
+
+<br>
+</br>
+<br>
+</br>
+
+
+### 3. web服务器软件版本介绍
+<pre>
+apache 1.3、2.0、2.2、2.4 没有先后，好坏区分，是并行发布，主流2.2，2.4
+
+
+nginx 版本更新较快，社区活跃（或bug较多）选择发布半年的版本
+
+
+resin 版本 4.0、3.1、3.0 主流3.1
+
+
+tomcat 版本 7.x 6.x 5.x 主流6.x
+
+php 版本 5.3、5.4、5.5、5.6 主流 5.2、5.3
+
+*企业里使用的软件主流版本为退后1、2年的版本
+</pre>
+
+
+<br>
+</br>
+<br>
+</br>
+
+### 4. linux 系统软件包安装方式
+
+<b>企业中如何安装软件，以apache为例</b>
+<br>
+</br>
+
+* 源码包方式安装：
+
+> 中小企业(nginx、apache、mysql)，灵活比喻自己做饭做菜
+
+
+* yum或rpm:
+
+> 简单，但是不灵活，比喻下饭店吃饭，访问量小，内部使用（yum包要大于自己的要求，则选 择）或是追求方便，或是服务器多追求维护成本 
+
+
+
+* 高级安装:
+
+> 结合了编译和yum、rpm包双重优点 
+内部人员通过源码根据自身业务需求，定制rpm包然后放在自己搭建的yum 仓库，然后在全网通过yum实现批量部署、管理、升级有难度，复杂
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+
+
+##第二章、apache服务器架设
+
+<br>
+</br>
+
+### 1. 介绍
+
+apache服务器是一个高性能、功能强大、稳定的静态web服务软件，当今主流,逐步被 nginx取代（nginx静态小文件并发比apache好）
+
+>特点: 功能强大
+     配置简单
+     速度快
+     应用广泛
+>    性能稳定可靠
+
+
+> 场景: 静态html,
+      lamp经典,
+      apache结合tomcat／resin 是中小企业首选,
+>     负载均衡环境
+
+<br>
+</br>
+
+###2.安装
+
+
+(1). 下载安装包
+
+``wget http://mirror.bit.edu.cn/apache/httpd/httpd-2.2.34.tar.gz``
+
+
+
+(2). 解压、预编译、安装
+<pre>
+./configure \
+--prefix=/application/apache2.2.27 \
+
+--enable-deflate \  
+「打开压缩：客户端请求后服务器将返回的内容进行压缩，浏览器解压，占用带宽小，但是占用服务器cpu」
+
+--enable-expires \  
+「打开缓存有效期: 因为浏览器打开页面后，是具有缓存持续时间的，此选项定义缓存有超时时间(缓存意义：下次打开速度快，但是不保证是新的)」
+
+--enable-headers \  「激活http头」
+--enable-modules=most \ 「激活大部分的模块」
+--enable-so \  
+
+--with-mpm=worker \ 
+
+「使用worker模式（主进程产生线程，线程提供服务，并发大相对不稳定） prefork （直接使用进程提供服务，进程稳定，但是消耗资源）」
+
+--enable-rewrite 「激活重写功能，使其可以使用伪静态技术」
+
+经验:如果在编译过程中报错，一般为xxx-devel包没有安装
+
+
+
+make && make install（生成文件）
+ln -s /application/apache2.2.27/ /application/apache （建立软连接，方便使用）
+</pre>
+
+
+<br>
+</br>
+
+(3). 启动apache
+
+``/application/apache/bin/apachectl -t （检查语法）``
+
+``/application/apache/bin/apachectl start （启动）``
+<br>
+</br>
+
+<pre>
+apachectl命令的几个参数
+
+apachectl -l ----> 列出加载的模块
+
+apachectl -t ----> 检查配置文件是否有语法错误
+
+apachectl -M ----> 列出哪些是静态模块哪些是动态模块
+
+apachectl graceful ----->平滑重启apache
+</pre>
+
+
+>strace ----> 跟踪系统调用与信号，用于调试（集诊断、调试、统计与一体的工具，我们可以使用strace对应用的系统调用和信号传递的跟踪结果来对应用进行分析，以达到解决问题或者是了解应用工作过程的目的）重要
+
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+
+##第三章、部署第一个站点，apache目录结构与配置文件解释
+
+<pre>
+* （1）apache 主配置文件:<mark>/conf/httpd.conf</mark>
+* （2）apache 默认网站根目录:grep -i "documentroot" httpd.conf 默认位置:<mark>/application/apache2.2.27/htdocs</mark>
+* （3）将网站文件放进htdocs目录
+* （4）不改配置文件不用重启服务
+</pre>
+
+<br>
+</br>
+<br>
+</br>
+
+
+###1.apache目录结构
+
+
+<pre>
+
+(1)
+├── bin
+│   ├── ab 压力测试工具，上线之前做压力测试，并发极限
+│   ├── apachectl 控制apache启动命令，调用httpd
+│   ├── apxs apache扩展编译和安装工具,安装好apache后如需要新模块，使用此命令
+│   ├── htpasswd  建立和更新基本认证文件
+│   ├── httpd     apache控制命令
+│   └── rotatelogs  apache的log日志轮询命令，可以由cronolog代替
+
+
+(2)
+├── conf  配置文件目录
+│   ├── extra 辅助配置文件目录
+│   │   ├── httpd-autoindex.conf
+│   │   ├── httpd-dav.conf
+│   │   ├── httpd-default.conf
+│   │   ├── httpd-info.conf
+│   │   ├── httpd-languages.conf
+│   │   ├── httpd-manual.conf
+│   │   ├── httpd-mpm.conf
+│   │   ├── httpd-multilang-errordoc.conf
+│   │   ├── httpd-ssl.conf
+│   │   ├── httpd-userdir.conf
+│   │   └──<mark> httpd-vhosts.conf</mark>
+│   ├── <mark>httpd.conf</mark>   apache主配置文件
+│   ├── magic
+│   ├── mime.types
+│   └── original
+│       ├── extra
+│       │   ├── httpd-autoindex.conf
+│       │   ├── httpd-dav.conf
+│       │   ├── httpd-default.conf
+│       │   ├── httpd-info.conf
+│       │   ├── httpd-languages.conf
+│       │   ├── httpd-manual.conf
+│       │   ├── httpd-mpm.conf
+│       │   ├── httpd-multilang-errordoc.conf
+│       │   ├── httpd-ssl.conf
+│       │   ├── httpd-userdir.conf
+│       │   └── httpd-vhosts.conf
+│       └── httpd.conf
+
+(3)
+├── htdocs 默认的站点目录
+│   ├── index.html  默认的首页文件，习惯(Directoryindex字段指定)
+例:
+<IfModule dir_module>
+    DirectoryIndex index.html
+</IfModule>
+
+
+(4)
+├── logs 错误日志和访问日志
+│   ├── access_log   访问日志(地址，客户端等)
+│   ├── error_log     错误日志
+│   └── httpd.pid     pid文件
+
+
+(5)
+── modules模块目录，使用apxs编译后都放在这里
+    └── httpd.exp
+
+
+</pre>
+
+<br>
+</br>
+
+
+
+###2.apache主配置文件解释
+
+<pre>
+(1) ServerRoot "/application/apache2.2.27" --->服务(软件)的根目录
+
+	Listen 80 ---> 服务在哪个端口监听默认是本机的所有IP
+	
+	
+	
+(2)
+	User daemon   编译安装软件默认用户
+	
+	Group daemon  编译安装软件默认组
+	
+	
+	
+(3)
+	ServerAdmin you@example.com 管理员的邮箱
+	
+	
+	
+(4)
+	DocumentRoot "/application/apache2.2.27/htdocs" 默认的站点目录*
+	
+	
+	
+(5)
+
+<Directory />    根目录权限控制字段；根目录拒绝其他人访问
+    Options FollowSymLinks 可以带符号连接
+    AllowOverride None(或all)     禁止相关的一些功能(是否能使用.htaccess)
+    Order deny,allow       与下一行一起指定不允许任何人访问根目录
+    Deny from all   
+</Directory>
+
+
+
+<mark>
+****重要
+
+<Directory "/application/apache2.2.27/htdocs"> 添加新站点必须有这6行
+    Options Indexes FollowSymLinks            (没有首页也可以展示目录结构,一定要禁止！需优化**!!) 
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+优化1:将Options Indexes Follow  SymLinks字段注释或加"-"号(将会报403错误)
+</mark>
+
+
+
+(6)
+
+DirectoryIndex zxx.html 指定访问的***默认首页,如果有多个空格分隔
+
+
+
+
+
+
+
+
+
+
+
+
+(5)
+<FilesMatch "^\.ht"> 对".ht"开头的文件做什么操作（文件匹配）
+    Order allow,deny
+    Deny from all
+    Satisfy All
+</FilesMatch>
+
+
+
+
+
+
+
+
+
+
+(6)
+ErrorLog "logs/error_log"  错误日志配置
+LogLevel warn    错误日志级别
+
+
+
+
+
+
+
+
+(7)
+<IfModule log_config_module> 日志的类型
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
+    <IfModule logio_module>
+      LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+    </IfModule>
+    CustomLog "logs/access_log" common
+</IfModule>
+
+
+
+
+
+
+
+
+(8)
+<IfModule alias_module>  cgi的支持（已淘汰，需删除）
+
+ScriptAlias /cgi-bin/ "/application/apache2.2.27/cgi-bin/"
+</IfModule>
+<IfModule cgid_module>：
+</IfModule>
+<Directory "/application/apache2.2.27/cgi-bin">
+    AllowOverride None
+    Options None
+    Order allow,deny
+    Allow from all
+</Directory>
+
+
+
+
+
+
+(9)
+DefaultType text/plain 缺省的类型默认文本
+<IfModule mime_module>
+    TypesConfig conf/mime.types
+    AddType application/x-compress .Z
+    AddType application/x-gzip .gz .tgz
+</IfModule>
+
+
+
+
+
+
+
+(10)
+<IfModule ssl_module> ssl相关
+SSLRandomSeed startup builtin
+SSLRandomSeed connect builtin
+</IfModule>
+
+
+</pre>
+
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+###3. 重要的扩展的配置文件解释
+
+
+<pre>
+（1）	httpd-vhosts.conf      **配置基于域名的虚拟住距网站需要使用这个文件
+
+
+	 NameVirtualHost *:80  	      基于域名的虚拟主机 *代表所有本机IP
+
+<mark> <VirtualHost *:80>    虚拟主机配置字段，多个虚拟主机就有多个这样的字段 </mark>
+
+    ServerAdmin webmaster@dummy-host.example.com
+    DocumentRoot "/application/apache2.2.27/docs/dummy-host.example.com"
+    ServerName dummy-host.example.com    				 虚拟主机域名
+    ServerAlias www.dummy-host.example.com
+    ErrorLog "logs/dummy-host.example.com-error_log"
+    CustomLog "logs/dummy-host.example.com-access_log" common
+</VirtualHost>
+
+
+
+
+	
+
+
+
+
+</pre>
+
+	
+	**需要打开httpd.conf字段
+	Include conf/extra/httpd-vhosts.conf
+	
+	
+	**需要在httpd.conf配置文件末尾加上根目录访问权限、网站目录访问权限！！
+	DocumentRoot "/application/apache2.2.27/docs"
+
+	<Directory />
+    	Options FollowSymLinks
+    	AllowOverride None
+    	Order deny,allow
+    	Deny from all
+	</Directory>
+
+
+
+	<Directory "/var/www/zxx">
+    	Options -Indexes FollowSymLinks
+    	AllowOverride None
+    	Order allow,deny
+    	Allow from all
+	</Directory>
+
+
+	<Directory "/var/www/xxz">
+   		Options -Indexes FollowSymLinks
+    	AllowOverride None
+    	Order allow,deny
+    	Allow from all
+	</Directory>
+
+
+
+
+
+
+
+
+
+<pre>
+
+
+
+	（2）httpd-mpm.conf
+
+			1.apache pid锁文件
+
+			IfModule !mpm_netware_module
+   		 	PidFile "logs/httpd.pid"
+			IfModule
+
+
+
+
+			2.apache 工作模式 prefork (默认的工作模式)
+			<IfModule mpm_prefork_module>
+    			StartServers          5
+    			MinSpareServers       5
+    			MaxSpareServers      10
+    			<mark>MaxClients</mark>          150   默认并发150
+    			MaxRequestsPerChild   0
+			</IfModule>
+
+
+			 apache 工作模式 work
+			<IfModule mpm_worker_module>
+   				 StartServers          2
+   				 <mark>MaxClients</mark>          150  默认并发150
+    			 MinSpareThreads      25
+    			 MaxSpareThreads      75
+    			 ThreadsPerChild      25
+    			 MaxRequestsPerChild   0
+			</IfModule>
+
+
+
+
+
+	（3）httpd-default.conf
+
+		1.Timeout 300 连接超时时间
+
+		2.KeepAlive On 连接保持
+
+		3.MaxKeepAliveRequests 100  最大保持永久连接个数
+
+		4.KeepAliveTimeout 5  在同一个连接上，等待下一个请求的时间
+
+		5.AccessFileName .htaccess   伪静态使用的文件
+
+		6.ServerTokens Full
+  		  ServerSignature On      可以修改这两项，隐藏版本号
+
+</pre>
+
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+##第四章、虚拟主机
+<br>
+</br>
+<br>
+</br>
+### 1. 虚拟主机概念
+
+> 简单的说就是一个web服务器配置多个网站；
+> 虚拟主机是部署多个站点，每个站点希望用不同的域名和站点目录，或者不同的端口，不同的IP。一个http服务器要配置多个站点，就需要虚拟主机。
+ 
+
+>>apache虚拟主机分类:     
+
+>> 1. 基于域名   <mark>*重要</mark>
+>> 2. 基于端口
+>> 3. 基于ip的
+>>
+
+<br>
+</br>
+<br>
+</br>
+
+
+
+
+### 2. 配置基于域名的虚拟主机
+
+
+<pre>
+
+1.域名列表    站点目录
+ www.zxx.org  /var/html/www
+ blog.zxx.org /var/html/blog
+ bbs.zxx.org  /var/html/bbs
+
+
+
+
+
+
+2.创建站点目录,首页文件，及文件内容
+
+
+
+
+mkdir -p /var/html/{www,blog,bbs}
+
+
+touch /var/html/{www,blog,bbs}/index.html
+
+
+
+for name in www blog bbs;do echo "http://$name.zxx.org" >/var/html/$name/index.html;done
+
+
+
+
+
+
+
+3.配置/apache/conf/extra/httpd-vhosts.conf
+
+
+
+	<mark>第一个站点</mark>
+ <VirtualHost *:80> 
+     ServerAdmin 1186207005@qq.com 
+     DocumentRoot "/var/html/www"            
+     ServerName www.zxx.org <mark>域名</mark>
+     ServerAlias zxx.org    
+     ErrorLog "logs/www-error_log"
+     CustomLog "logs/zxx.org-access_log" common
+ </VirtualHost>
+ 
+ 
+ 	<mark>第二个站点</mark>
+ <VirtualHost *:80> 		   	         
+     ServerAdmin 1186207005@qq.com
+     DocumentRoot "/var/html/blog"
+     ServerName blog.zxx.org
+     ErrorLog "logs/blog-error_log"
+     CustomLog "logs/blog.zxx.org-access_log" common
+ </VirtualHost>
+ 
+ 
+ 	<mark>第三个站点</mark>
+ <VirtualHost *:80> 			        
+     ServerAdmin 1186207005@qq.com
+     DocumentRoot "/var/html/bbs"
+     ServerName bbs.zxx.org
+     ErrorLog "logs/bbs-error_log"
+     CustomLog "logs/bbs.zxx.org-access_log" common
+ </VirtualHost>
+
+
+
+</pre> 
+
+
+
+
+
+ 
+	4.编辑httpd.conf，打开vhost功能,添加目录访问权限
+	
+		vi httpd.conf
+
+		#Virtual hosts
+		Include conf/extra/httpd-vhosts.conf
+
+
+
+	这里只加主目录的权限,子目录继承
+	<Directory "/var/html/"> 
+   		 Options -Indexes FollowSymLinks
+   		 AllowOverride None
+   		 Order allow,deny
+    	 Allow from all
+	</Directory> 
+
+
+<pre>
+
+5.配置客户端hosts文件做解析测试
+
+vi /etc/hosts
+192.168.123.188 www.zxx.org
+192.168.123.188 blog.zxx.org
+192.168.123.188 bbs.zxx.org
+
+ping 检测
+
+ping www.zxx.org
+ping blog.zxx.org
+ping bbs.zxx.org
+
+测试访问
+
+</pre>
+
+
+<br>
+</br
+<br>
+</br
+<br>
+</br>
+
+
+
+
+###3.基于端口的虚拟主机,用于内部网站访问
+
+
+<pre>
+
+1. 配置httpd.conf文件
+
+
+Listen 80 添加欲使用的端口
+Listen 8000
+Listen 9000
+
+
+
+
+
+2. 配置httpd-vhosts.conf文件
+
+# Use name-based virtual hosting.
+#
+NameVirtualHost *:80
+NameVirtualHost *:8000
+NameVirtualHost *:9000     添加欲添加监听端口
+
+
+</pre>
+
+
+	3. 配置/apache/conf/extra/httpd-vhosts.conf
+
+		<VirtualHost *:8000> 		修改该字段
+   		 ServerAdmin 1186207005@qq.com
+    	 DocumentRoot "/var/html/blog"
+   	     ServerName blog.zxx.org
+   	     ErrorLog "logs/blog-error_log"
+         CustomLog "logs/blog.zxx.org- access_log" common
+		</VirtualHost>
+
+
+
+		<VirtualHost *:9000>		修改该字段
+    	ServerAdmin 1186207005@qq.com
+    	DocumentRoot "/var/html/bbs"
+    	ServerName bbs.zxx.org
+    	ErrorLog "logs/bbs-error_log"
+    	CustomLog "logs/bbs.zxx.org-access_log" common
+</VirtualHost>
+
+
+
+	4. apachectl -t检查语法，apachectl 		graceful
+
+
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+
+### 4.基于IP的虚拟主机
+
+<pre>
+
+-1.设置临时测试IP:
+ifconfig eth0:1 x.x.x.x netmask x.x.x.x
+
+
+
+1. 修改httpd-vhost.conf
+
+<VirtualHost 192.168.123.188:80>   需要修改监听IP
+    ServerAdmin 1186207005@qq.com
+    DocumentRoot "/var/html/www"
+    ServerName 192.168.123.188     将域名修改为IP
+    ServerAlias zxx.org
+    ErrorLog "logs/www-error_log"
+    CustomLog "logs/zxx.org-access_log" common
+</VirtualHost>
+
+
+
+<VirtualHost 192.168.123.200:80>   需要修改监听IP
+    ServerAdmin 1186207005@qq.com
+    DocumentRoot "/var/html/blog"
+    ServerName 192.168.123.200     将域名修改为IP
+    ErrorLog "logs/blog-error_log"
+    CustomLog "logs/blog.zxx.org-access_log" common
+</VirtualHost>
+
+
+
+2. apache 日志格式：
+
+
+1. 通用日志格式 CommonLog Format  通常使用
+2. 组合日志格式 CombinedLog Format
+
+
+vhost配置文件里可以引用具体使用哪种格式
+
+</pre>
+
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+
+
+###5.日志轮询
+
+> apache常规只有一个日志文件，不方便备份和查看所以使用轮询
+
+<pre>
+1.cronolog 常用
+
+(1)安装：./configure
+      make 
+      make install
+
+(2)配置：
+        mkdir -p /app/logs      创建存放日志的目录	
+	修改http-vhost配置文件，在需要轮询的网站下添加：
+	CustomLog "|/usr/local/sbin/cronolog /app/logs/access_(your site)_%Y%m%d.log" combined
+
+
+
+2.rotatelogs  了解 
+
+
+
+
+3.手动切割日志
+
+在每日的0:00使用crond执行脚本:
+
+cd /application/apache/logs
+mv www-(your side)_log www-access_$(date +%F)log
+/application/apache/bin/apachectl graceful
+
+
+
+
+4.隐藏apache版本号
+
+(1) 在准备安装apache时编辑源文件
+
+/httpd-2.2.27/include/ap_release.h
+修改
+#define AP_SERVER_BASEVENDOR "Apache Software Foundation"
+#define AP_SERVER_BASEPROJECT "Apache HTTP Server"
+#define AP_SERVER_BASEPRODUCT "Apache"
+
+#define AP_SERVER_MAJORVERSION_NUMBER 2
+#define AP_SERVER_MINORVERSION_NUMBER 2
+#define AP_SERVER_PATCHLEVEL_NUMBER   27
+#define AP_SERVER_DEVBUILD_BOOLEAN    0
+
+
+和/httpd-2.2.27/os/unix/os.h 
+修改#define PLATFORM "Unix"
+
+
+和/application/apache/conf/extra/httpd-default.conf
+修改ServerTokens Full ---->  ServerTokens Prod
+    ServerSignature On ---->  ServerSignature Off
+
+</pre>
+
+
+
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+
+
+##第五章、Mysql
+<br>
+</br>
+### 1.安装
+
+> 版本为:mysql5.1.7.2
+
+<pre>
+1.解压：tar xf mysql-5.1.72.tar.gz
+
+
+2.添加用户:useradd mysql -M -s /sbin/nologin
+
+
+3.安装:
+(1)
+./configure \
+--prefix=/application/mysql5.1.72 \
+--with-unix-socket-path=/application/mysql5.1.72/tmp/mysql.sock \
+--localstatedir=/application/mysql5.1.72/data \
+--enable-assembler \
+--enable-thread-safe-client \
+--with-mysqld-user=mysql \
+--with-big-tables \
+--without-debug \
+--with-pthread \
+--enable-assembler \
+--with-extra-charsets=complex \
+--with-readline \
+--with-ssl \
+--with-embedded-server \
+--enable-local-infile \
+--with-plugins=partition,innobase \
+--with-mysqld-ldflags=-all-static \
+--with-client-ldflags=-all-static
+
+
+(2)
+make && make install
+
+
+(3)
+ln -s /application/mysql5.1.72  /application/mysql
+
+以上如果mysql分离出去，则到此结束，下面为apache与mysql整合
+
+
+
+</pre>
+
+<br>
+</br>
+### 2.初始化数据库
+
+<pre>
+(1)选择默认配置模版文件
+
+/安装包解压位置/mysql-5.1.72/support-files
+
+ll my*.cnf
+
+my-huge.cnf 
+my-innodb-heavy-4G.cnf
+my-large.cnf
+my-medium.cnf
+my-small.cnf
+
+根据硬件配置选择不同的mysql配置文件
+ 
+cp my-small.cnf /etc/my.cnf  覆盖掉原有配置文件
+
+
+
+
+(2)创建存放数据库文件目录,并授权
+
+mkdir /application/mysql/data -p
+chown -R mysql.mysql /application/mysql
+
+
+(3)创建初始化文件
+/application/mysql/bin/mysql_install_db --basedir=/application/mysql --datadir=/application/mysql/data/ --user=mysql
+
+</pre>
+
+
+
+<br>
+</br>
+
+
+
+###3.启动数据库与关闭
+
+<pre>
+创建启动脚本：cp /安装包解压位置/mysql-5.1.72/support-files/mysql.server  /etc/init.d/mysqld
+
+-----------------------------------------------------
+修改/etc/init.d/mysqld
+46:basedir=/application/mysql (注意没有/)
+47:datadir=/application/mysql/data (注意没有/)
+
+touch /application/mysql/data/yourFQDN.pid
+
+以上还需检查
+-----------------------------------------------------
+
+
+chmod +x /etc/init.d/mysqld
+chkconfig --add mysqld 
+chkconfig mysqld on
+/etc/init.d/mysqld start
+
+
+
+第二种启动方法：*****
+/application/mysql/bin/mysqld_safe &
+
+
+关闭mysql：mysqladmin shutdown
+
+</pre>
+
+<br>
+</br>
+###4.mysql基本管理
+
+<pre>
+设置密码:mysqladmin -u root password ''
+
+登录:mysql -u root -p
+
+查看版本:select version();
+查看用户:select user();
+select user,host from mysql.user
+
+查看数据库:show databases;
+安全起见删除test数据库:drop databases test;
+
+</pre>
+
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
+
+##第六章、apache与mysql、PHP整合
+<br>
+</br>
+### 1.检查
+<pre>
+lsof -i:80
+lsof -i:3306
+
+检查安装路径:/application/mysql
+	     /application/apache
+</pre>
+
+<br>
+</br>
+### 2.安装php
+
+(1).安装PHP所需的lib库(devel库)
+
+<pre>
+yum install zlib libxml libjpeg freetype libpng gd  curl libiconv  *zlib-devel *libxml2-devel libjpeg-devel *freetype-devel *libpng-devel *gd-devel *curl-devel *libxslt-devel  -y
+</pre>
+
+
+(2).安装libiconv-1.14
+<pre>
+./configure --prefix=/usr/local/libiconv
+make
+make install
+</pre>
+
+
+<br>
+</br>
+
+### 3.安装PHP 版本:5.3
+
+<pre>
+(1)
+./configure \
+--prefix=/application/php5.3.27 \
+--with-apxs2=/application/apache/bin/apxs \ ------>为apache添加模块，这里添加php模块(php在apache中以模块方式使用)
+--with-mysql=/application/mysql \
+--with-xmlrpc \
+--with-openssl \
+--with-zlib \
+--with-freetype-dir \
+--with-gd \
+--with-jpeg-dir \
+--with-png-dir \
+--with-iconv=/usr/local/libiconv \
+--enable-short-tags \
+--enable-sockets \
+--enable-zend-multibyte \
+--enable-soap \
+--enable-mbstring \
+--enable-static \
+--enable-gd-native-ttf \
+--with-curl \
+--with-xsl \
+--enable-ftp \
+--with-libxml-dir
+
+(2)
+CentOS release 6.8可能会报错：
+configure: error: xslt-config not found. Please reinstall the libxslt >=1.1.0 distribution
+
+因为缺少libxslt-devel库，解决:yum install libxslt-devel
+
+
+(3)
+make && make install
+ln -s /application/php5.3.27  /application/php
+
+</pre>
+
+
+
+<br>
+</br>
+
+
+
+### 4.配置PHP
+
+
+<pre>
+<mark>(1)选择配置文件
+ll /php解压目录/*.ini-*
+
+php.ini-development 开发 (错误日志全部打开用于排错)
+php.ini-production  生产* 
+
+
+
+(2)拷贝
+cp php.ini-production /application/php/lib/php.ini
+
+</pre>
+
+<br>
+</br>
+
+
+### 5.与apache整合
+
+<pre>
+(1).安装完php后会自动生成：
+
+grep -n 'libphp5' /application/apache/conf/httpd.conf
+54:LoadModule php5_module        modules/libphp5.so
+
+模块位置:/application/apache/modules/libphp5.so
+
+
+
+(2).在apache配置文件323行添加如下，开启apache对php解析请求
+
+AddType application/x-httpd-php .php .phtml
+AddType application/x-httpd-php-source .phps
+</pre>
+
+
+(3).在168行添加php首页支持 
+
+``<IfModule dir_module>  DirectoryIndex index.html index.php </IfModule>``        
+
+
+<pre>
+(4).修改apache配置文件，更改apache默认用户，增加安全性
+
+User daemon   ------> User www
+Group daemon  ------> User www
+</pre>
+
+<br>
+</br>
+
+
+
+### 6.测试
+
+
+(1)测试apache与php是否整合完成
+
+
+			<?php
+
+       			 phpinfo();
+
+			?>
+
+
+
+(2)测试php是否可以连接mysql
+
+		<?php
+        		//$link_id=mysql_connect('主机名','用户','密码');
+        					$link_id=mysql_connect('localhost','root','kerber') or 			mysql_error();
+
+       	 if($link_id){
+                echo "mysql successful by zxx !";
+        		}
+        		else{
+                echo mysql_error();
+        		}
+						?>
+	
+
+
+### 7.小结:配置apache与PHP整合三步
+
+> (1)添加对.php类型文件解析请求的支持
+
+> (2)添加对php首页的支持
+
+> (3)修改默认apache账户提升安全性
+
+
+
+<pre>
+
+diff /application/apache/conf/httpd.conf /application/apache/conf/httpd.conf.bak 
+
+
+67,68c67,68
+< User www
+< Group www 
+---
+> User daemon
+> Group daemon
+
+168c168
+<     DirectoryIndex index.php index.html zxx.html
+---
+>     DirectoryIndex index.html zxx.html
+
+
+311,312d310
+<     AddType application/x-httpd-php .php .phtml
+<     AddType application/x-httpd-php-source .phps
+
+</pre>
+
+
+
+<br>
+</br>
+
+
+
+
+
+
+
