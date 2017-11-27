@@ -21,7 +21,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 >3. web cache （web 缓存）
 
-![1.2  大型企业动静分离架构](https://ozxcyqizw.bkt.clouddn.com/1.2  大型企业动静分离架构.png)
+![1.2大型企业动静分离架构](https://ozxcyqizw.bkt.clouddn.com/1.2大型企业动静分离架构.png)
 
 <br>
 </br>
