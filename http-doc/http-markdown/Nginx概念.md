@@ -39,7 +39,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 >4. 支持epoll模型，所以nginx可以支持高并发
 
 >5. nginx配合动态服务和apache是不一样的
-![1.3  LAMP与LNMP实现原理对比](https://ozxcyqizw.bkt.clouddn.com/1.3  LAMP与LNMP实现原理对比.png)
+![1.3  LAMP与LNMP实现原理对比](http://ozxcyqizw.bkt.clouddn.com/1.3%20%20LAMP%E4%B8%8ELNMP%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%AF%B9%E6%AF%94.png)
 
 
 >6. 利用nginx可以对ip限速，限制连接数(自身的模块)
