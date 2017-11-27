@@ -85,7 +85,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 ### 五、主流web服务产品对比
 
-####1）Apache
+#### 1）Apache
 <pre>
     . 2.2版本非常稳定强大，2.4的性能更强
     . Prefork模式取消了进程开销，性能高
@@ -98,7 +98,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 <br>
 </br>
 
-####2) Nginx
+#### 2) Nginx
 <pre>
     . 基于异步IO模型(epool,kqueue),性能强，能支持上万并发
     . 对小文件支持很好，性能高(限静态小于1M)
@@ -109,7 +109,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 <br>
 </br>
 
-####3）Lighttpd
+#### 3）Lighttpd
 <pre>
     . 基于异步IO模型，性能和nginx相近
     . 扩展库是so模式，比nginx灵活
