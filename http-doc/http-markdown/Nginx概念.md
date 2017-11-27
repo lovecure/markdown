@@ -1,12 +1,14 @@
 
-# NGINX 概念
+# Nginx 概念
 
 ## 总结
 <br>
 </br>
 
-1. nginx 实际使用时尽量将nginx用于小文件静态数据环境中
-2. apache 更擅长动态网页
+1. Nginx 实际使用时尽量将Nginx用于小文件静态数据环境中
+2. Apache 更擅长动态网页
+3. 满足需求的前提下先采用，在逐步完善
+4. 没有特殊需求：对外业务使用Nginx 对内业务Apache(yum安装LAMP)
 
 <br>
 </br>
@@ -18,7 +20,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 <br>
 </br>
 
-### 二、nginx 三大功能
+### 二、Nginx 三大功能
 
 >1. WWW web服务 http协议 端口80
 
@@ -31,7 +33,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 <br>
 </br>
 
-### 三、nginx优点
+### 三、Nginx优点
 
 >0. 配置简单灵活
 
@@ -41,27 +43,27 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 >3. 功能种类多(web,cache,proxy),但是每个功能都不是强项
 
->4. 支持epoll模型，所以nginx可以支持高并发
+>4. 支持epoll模型，所以Nginx可以支持高并发
 
->5. nginx配合动态服务和apache是不一样的
+>5. Nginx配合动态服务和Apache是不一样的
 ![1.3  LAMP与LNMP实现原理对比](http://ozxcyqizw.bkt.clouddn.com/1.3%20%20LAMP%E4%B8%8ELNMP%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%AF%B9%E6%AF%94.png)
 
 
->6. 利用nginx可以对ip限速，限制连接数(自身的模块)
+>6. 利用Nginx可以对ip限速，限制连接数(自身的模块)
 
 <br>
 </br>
 
 
 
-### 四、nginx应用场合
+### 四、Nginx应用场合
 
 >1.静态服务器（图片、视频服务）
->>      html,js,css,flv等(还有lighttpd)
+>>      html,js,css,flv等(还有Lighttpd)
 
 
 
->2.动态服务：nginx+fastcgi的方式运行php,jsp
+>2.动态服务：Nginx+fastcgi的方式运行php,jsp
 >>      动态并发
 >>      php： 500 ~ 1500
 >>      mysql：300 ~ 1500
@@ -78,7 +80,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 >>      反向代理：代替外面来的客户请求内部的服务器 竞争:haproxy,F5,A10
 
->>      日PV2000万以下(参考)都可以使用nginx做代理
+>>      日PV2000万以下(参考)都可以使用Nginx做代理
 
 
 
@@ -117,8 +119,8 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 #### 3）Lighttpd
 <pre>
-    . 基于异步IO模型，性能和nginx相近
-    . 扩展库是so模式，比nginx灵活
+    . 基于异步IO模型，性能和Nginx相近
+    . 扩展库是so模式，比Nginx灵活
     . 全球使用率低,安全性较差
     . <mark>通过插件(mod_secdownload)可实现文件url地址加密</mark>
 </pre>
@@ -133,11 +135,26 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 ![2DB596C4-65F4-4D47-8EBF-4334506C30D5](http://ozxcyqizw.bkt.clouddn.com/2DB596C4-65F4-4D47-8EBF-4334506C30D5.png)
 
-### 六、nginx性能高的原因
-nginx使用最新的epoll(squid、memcached)与kqueue网络I/O模型，而传统的apache使用的是select模型
+<br>
+</br>
 
-epoll vs select
 
-> 情景：去大学宿舍楼找人，select模型大妈带着访客一个门yi ge
+### 六、Nginx性能高的原因
+Nginx使用最新的epoll(squid、memcached)与kqueue网络I/O模型，而传统的Apache使用的是select模型
 
+#### Epoll <mark>vs</mark> Select
+
+> 情景：
+> 去大学宿舍楼找人，select模型大妈带着访客一间宿舍一间宿舍的去找，而epoll模型大妈则是先找宿舍住宿登记表,然后告诉访客即可
+
+<br>
+</br>
+
+### 七、企业生产环境中如何选择web服务
+
+>静态业务：且高并发则采用Nginx或Lighttpd，并发低则使用apache
+
+>动态业务：采用Nginx和Apache均可
+
+>既有静态业务也有动态业务：Nginx或是Apache<mark>不要多选</mark >
 
