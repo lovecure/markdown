@@ -156,5 +156,20 @@ Nginx使用最新的epoll(squid、memcached)与kqueue网络I/O模型，而传统
 
 >动态业务：采用Nginx和Apache均可
 
->既有静态业务也有动态业务：Nginx或是Apache<mark>不要多选</mark >
+>既有静态业务也有动态业务：Nginx或是Apache<mark>不要多选</mark>
+
+<br>
+</br>
+
+### 八、Nginx虚拟主机
+
+<br>
+</br>
+
+`` Apache-------------Nginx``
+``<VitrualHost> == server{ }标签 ``
+
+    >1.基于域名 外部网站
+    >2.基于端口 公司内部使用
+    >3.基于IP(不完善)
 
