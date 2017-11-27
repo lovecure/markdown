@@ -32,13 +32,15 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 >1. 高并发(静态小文件) 静态1-2W
 
->2. 占用资源少 3W并发 10个线程，内存消耗几百M
+>2. 占用资源少 2W并发 10个线程，内存消耗几百M
 
->3. 功能种类多(web,cache,proxy) 
+>3. 功能种类多(web,cache,proxy),但是每个功能都不是强项
 
 >4. 支持epoll模型，所以nginx可以支持高并发
 
 >5. nginx配合动态服务和apache是不一样的
+![1.3  LAMP与LNMP实现原理对比](https://ozxcyqizw.bkt.clouddn.com/1.3  LAMP与LNMP实现原理对比.png)
+
 
 >6. 利用nginx可以对ip限速，限制连接数(自身的模块)
 
@@ -49,23 +51,23 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 ### 四、nginx应用场合
 
->1. 静态服务器（图片、视频服务），另一个lighttpd
-  html,js,css,flv等
+>1. 静态服务器（图片、视频服务）
+>>      另一个lighttpd html,js,css,flv等
 
 
 
 >2. 动态服务 nginx+fastcgi的方式运行php,jsp
->> 动态并发:  php 500 ~ 1500
->>         mysql 300 ~ 1500
+>>      动态并发:php 500 ~ 1500
+>>      mysql 300 ~ 1500
 
 
 
 >3. 反向代理(整体过程代替处理区别于LVS)，负载均衡
 
->> 正向代理：宽带路由器上网
->> 反向代理：代替外面来的客户请求内部的服务器 竞争:haproxy,F5,A10
+>>      正向代理：宽带路由器上网
+>>      反向代理：代替外面来的客户请求内部的服务器 竞争:haproxy,F5,A10
 
->> 日PV2000万以下(参考)都可以使用nginx做代理
+>>      日PV2000万以下(参考)都可以使用nginx做代理
 
 
 
