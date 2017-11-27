@@ -133,3 +133,11 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 ![2DB596C4-65F4-4D47-8EBF-4334506C30D5](http://ozxcyqizw.bkt.clouddn.com/2DB596C4-65F4-4D47-8EBF-4334506C30D5.png)
 
+### 六、nginx性能高的原因
+nginx使用最新的epoll(squid、memcached)与kqueue网络I/O模型，而传统的apache使用的是select模型
+
+epoll vs select
+
+> 情景：去大学宿舍楼找人，select模型大妈带着访客一个门yi ge
+
+
