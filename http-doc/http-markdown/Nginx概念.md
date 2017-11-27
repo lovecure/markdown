@@ -2,6 +2,11 @@
 # NGINX 概念
 
 ## 总结
+<br>
+</br>
+
+1. nginx 实际使用时尽量将nginx用于小文件静态数据环境中
+2. apache 更擅长动态网页
 
 <br>
 </br>
@@ -102,7 +107,7 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 #### 2) Nginx
 <pre>
     . 基于异步IO模型(epool,kqueue),性能强，能支持上万并发
-    . 对小文件支持很好，性能高(限静态小于1M)
+    . 对小文件支持很好，性能高(限静态小于1M) 
     . 代码优美，<mark>扩展库必须编译进主程序</mark>
     . 消耗系统资源较低
 </pre>
@@ -118,4 +123,8 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
     . <mark>通过插件(mod_secdownload)可实现文件url地址加密</mark>
 </pre>
 
+
+![137B6FC9-59AB-486F-8221-707FFB2A9489](http://ozxcyqizw.bkt.clouddn.com/137B6FC9-59AB-486F-8221-707FFB2A9489.png)
+
+![2DB596C4-65F4-4D47-8EBF-4334506C30D5](http://ozxcyqizw.bkt.clouddn.com/2DB596C4-65F4-4D47-8EBF-4334506C30D5.png)
 
