@@ -1,8 +1,26 @@
 # Nginx安装
 ## Nginx安装总结
-1.
-2.
+1.排错3步曲
+<pre>   1) ping  高速公路通不通
+   2) telnet  端口让不让进
+   3) 服务器本地curl或wget
+</pre>
+
+2.1 启动过程中报错:<mark>libpcre.so.1:cannot open shared object file:No such file or directory</mark>
+<pre>2.1 先找到这个so文件``find / -name libpcre.so.1``
+
+2.2 编辑ld.so.conf文件手动加载libpcre.so.1文件的目录
+        ``echo '/usr/local/lib >> /etc/ld.so.conf'``
+        
+2.3 执行:ldconfig 加载so
+
+2.4 规避此问题:在编译Nginx时使用:--with-pcre=path来指定pcre源码位置
+</pre>
+
 3.
+
+<br>
+</br>
 
 ### 一、准备
 > 1. Nginx安装主文件，距官方发布最新版的半年之前的稳定版本
@@ -16,6 +34,7 @@
 
 > 3. 安装openssl，不装会报错(SSL modules...) 
 <pre>``yum install openssl openssl-devel`` </pre>
+
 
 <br>
 </br>
@@ -35,6 +54,19 @@
 <pre>
 ./configure --user=nginx --group=nginx --prefix=/application/nginx1.12.2 --with-http_stub_status_module --with-http_ssl_module
 </pre>
+
+> 3.安装
+<pre>``make && make install`` 
+``ln  -s /application/nginx1.12.2 /application/nginx``</pre>
+
+<br>
+</br>
+
+### 三、启动
+<pre>Nginx_install_dir/sbin/nginx </pre>
+
+<pre>lsof -i:80
+curl 127.0.0.1</pre>
 
 
 
