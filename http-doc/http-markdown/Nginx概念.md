@@ -20,18 +20,26 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 >2. 负载均衡（反向代理）
 
 >3. web cache （web 缓存）
+
 ![1.2  大型企业动静分离架构](https://ozxcyqizw.bkt.clouddn.com/1.2  大型企业动静分离架构.png)
+
 <br>
 </br>
 
 ### 三、nginx优点
 
 >0. 配置简单灵活
+
 >1. 高并发(静态小文件) 静态1-2W
+
 >2. 占用资源少 3W并发 10个线程，内存消耗几百M
+
 >3. 功能种类多(web,cache,proxy) 
+
 >4. 支持epoll模型，所以nginx可以支持高并发
+
 >5. nginx配合动态服务和apache是不一样的
+
 >6. 利用nginx可以对ip限速，限制连接数(自身的模块)
 
 <br>
