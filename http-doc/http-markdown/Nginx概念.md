@@ -67,7 +67,9 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
 
 >>      正向代理：宽带路由器上网
 >>>     
-![7C274974-6B98-434D-934E-9C2A36B986B7](https://ozxcyqizw.bkt.clouddn.com/7C274974-6B98-434D-934E-9C2A36B986B7.png)
+
+![7C274974-6B98-434D-934E-9C2A36B986B7](http://ozxcyqizw.bkt.clouddn.com/7C274974-6B98-434D-934E-9C2A36B986B7.png)
+
 
 >>      反向代理：代替外面来的客户请求内部的服务器 竞争:haproxy,F5,A10
 
@@ -101,6 +103,18 @@ Nginx (Engine x) 俄罗斯人开发，开源的WWW服务软件，体积小,高�
     . 基于异步IO模型(epool,kqueue),性能强，能支持上万并发
     . 对小文件支持很好，性能高(限静态小于1M)
     . 代码优美，<mark>扩展库必须编译进主程序</mark>
+    . 消耗系统资源较低
+</pre>
+
+<br>
+</br>
+
+####3）Lighttpd
+<pre>
+    . 基于异步IO模型，性能和nginx相近
+    . 扩展库是so模式，比nginx灵活
+    . 全球使用率低,安全性较差
+    . <mark>通过插件(mod_secdownload)可实现文件url地址加密</mark>
 </pre>
 
 
