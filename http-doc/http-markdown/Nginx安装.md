@@ -22,4 +22,19 @@
 
 ### 二、安装
 
+<br>
+</br>
+
+> 1.创建用户与组
+
+``user add nginx -s /sbin/nologin -M`` 
+
+
+> 2.预编译
+
+<pre>
+./configure --user=nginx --group=nginx --prefix=/application/nginx1.12.2 --with-http_stub_status_module --with-http_ssl_module
+</pre>
+
+
 
