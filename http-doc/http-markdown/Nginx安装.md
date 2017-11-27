@@ -6,16 +6,23 @@
    3) 服务器本地curl或wget
 </pre>
 
-2.1 启动过程中报错:<mark>libpcre.so.1:cannot open shared object file:No such file or directory</mark>
-<pre>2.1 先找到这个so文件``find / -name libpcre.so.1``
+<br>
+</br>
 
-2.2 编辑ld.so.conf文件手动加载libpcre.so.1文件的目录
-        ``echo '/usr/local/lib >> /etc/ld.so.conf'``
+2.启动过程中报错:<mark>libpcre.so.1:cannot open shared object file:No such file or directory</mark>
+<pre>
+先找到这个so文件 
+find / -name libpcre.so.1
+
+编辑ld.so.conf文件手动加载libpcre.so.1文件的目录 
+echo '/usr/local/lib >> /etc/ld.so.conf'
         
-2.3 执行:ldconfig 加载so
+执行:ldconfig加载so
 
-2.4 规避此问题:在编译Nginx时使用:--with-pcre=path来指定pcre源码位置
+规避此问题:在编译Nginx时使用: --with-pcre=path来指定pcre源码位置
 </pre>
+<br>
+</br>
 
 3.
 
