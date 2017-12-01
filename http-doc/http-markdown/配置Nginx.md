@@ -132,7 +132,7 @@ worker_processes  1;  <mark>指定有几个主进程,与实际CPU核数相同(1c
 #pid        logs/nginx.pid; <mark>Nginx进程锁</mark>
 
 
-events {      <mark>Nginx处理请求的最大数量</mark>
+events {      <mark>Nginx处理请求的最大并发连接数</mark>
     worker_connections  1024;
 }
 
