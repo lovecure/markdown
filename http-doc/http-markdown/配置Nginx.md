@@ -39,21 +39,25 @@ Nginx使用不同的模块实现不同的功能,大多数软件使用模块的�
      
 ### 三、Nginx目录结构
 
-    tree /appliction/nginx
     
-<pre>/application/nginx
-├── client_body_temp
+    
+<pre>
+tree /appliction/nginx
+
+
+/application/nginx
+├── client_body_temp   
 ├── conf
-│   ├── fastcgi.conf
+│   ├── fastcgi.conf    ---->动态网站配置文件
 │   ├── fastcgi.conf.default
-│   ├── fastcgi_params
+│   ├── fastcgi_params  ---->动态网站配置参数文件
 │   ├── fastcgi_params.default
 │   ├── koi-utf
 │   ├── koi-win
 │   ├── mime.types
 │   ├── mime.types.default
-│   ├── nginx.conf
-│   ├── nginx.conf.default
+│   ├── nginx.conf   -----> <mark>核心配置文件,静态网站用</mark>
+│   ├── nginx.conf.default -----> 配置文件的备份
 │   ├── scgi_params
 │   ├── scgi_params.default
 │   ├── uwsgi_params
@@ -69,7 +73,7 @@ Nginx使用不同的模块实现不同的功能,大多数软件使用模块的�
 │   └── nginx.pid
 ├── proxy_temp
 ├── sbin
-│   └── nginx
+│   └── nginx   -----><mark>核心内容</mark>
 ├── scgi_temp
 └── uwsgi_temp
 </pre>
