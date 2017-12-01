@@ -7,7 +7,7 @@
 <br>
 </br>
 
-### 一、Nginx配置文件位置
+### 一、Nginx默认站点位置
      
      nginx_install_dir/conf (没有extra目录)
      
@@ -48,34 +48,38 @@ tree /appliction/nginx
 /application/nginx
 ├── client_body_temp   
 ├── conf
-│   ├── fastcgi.conf    ---->动态网站配置文件
+│   ├── fastcgi.conf    ----><mark>动态网站配置文件</mark>
 │   ├── fastcgi.conf.default
-│   ├── fastcgi_params  ---->动态网站配置参数文件
+│   ├── fastcgi_params  ----><mark>动态网站配置参数文件</mark>
 │   ├── fastcgi_params.default
 │   ├── koi-utf
 │   ├── koi-win
 │   ├── mime.types
 │   ├── mime.types.default
 │   ├── nginx.conf   -----> <mark>核心配置文件,静态网站用</mark>
-│   ├── nginx.conf.default -----> 配置文件的备份
+│   ├── nginx.conf.default -----><mark>配置文件的备份</mark>
 │   ├── scgi_params
 │   ├── scgi_params.default
 │   ├── uwsgi_params
 │   ├── uwsgi_params.default
 │   └── win-utf
 ├── fastcgi_temp
-├── html
-│   ├── 50x.html
+├── html   -----><mark>默认站点目录</mark> 
+│   ├── 50x.html ----><mark>出错页面</mark>
 │   └── index.html
 ├── logs
-│   ├── access.log
-│   ├── error.log
-│   └── nginx.pid
+│   ├── access.log -----><mark>访问日志</mark>
+│   ├── error.log  -----><mark>错误日志</mark>
+│   └── nginx.pid  -----><mark>进程锁文件</mark>
 ├── proxy_temp
 ├── sbin
-│   └── nginx   -----><mark>核心内容</mark>
+│   └── nginx   -----><mark>核心启动文件</mark>
 ├── scgi_temp
 └── uwsgi_temp
 </pre>
+
+### 四、模块化的Nginx配置文件
+
+
 
 
