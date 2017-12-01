@@ -78,6 +78,9 @@ tree /appliction/nginx
 └── uwsgi_temp
 </pre>
 
+ <br>
+</br>
+
 ### 四、模块化的Nginx配置文件
 
 <pre>
@@ -92,7 +95,7 @@ http {
     default_type  application/octet-stream;
     sendfile        on;
     keepalive_timeout  65;
-    server {
+    server { <mark>--不同的模块又可以包含多个子模块</mark>
         listen       80;
         server_name  localhost;
         location / {
@@ -107,4 +110,14 @@ http {
 }
 <mark>--整体是一个Main指令</mark> 
 </pre>
+
+ <br>
+</br>
+
+### 五、Nginx配置文件详解
+
+<pre>
+
+</pre>
+
 
