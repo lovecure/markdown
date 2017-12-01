@@ -86,7 +86,7 @@ tree /appliction/nginx
 <pre>
 
 <mark>--整体是一个Main指令</mark>
-worker_processes  1;
+worker_processes  1; <mark>--每个配置以分号结尾</mark>--
 events {
     worker_connections  1024;
 } <mark>--每个模块由"{}"括起来</mark>
@@ -117,10 +117,15 @@ http {
 ### 五、Nginx配置文件详解
 
 <pre>
-#user  nobody;
-worker_processes  1;  
+#user  nobody;  <mark>Nginx默认用户,已修改为nginx</mark>
+worker_processes  1;  <mark>指定有几个主进程,与实际CPU核数相同(1cpu,8core 2cpu=16core)
+「Nginx进程模式为一个主进程带许多子进程」</mark> 
 
-#error_log  logs/error.log;
+网站访问量请求大的时候,需要调整此参数来增加work进程
+
+
+
+#error_log  logs/error.log;  <mark>错误日志,尽量记录error日志</mark>
 #error_log  logs/error.log  notice;
 #error_log  logs/error.log  info;
 
