@@ -5,6 +5,7 @@
      
      nginx_install_dir/conf (没有extra目录)
      
+     grep html nginx.conf 
      
 
 
