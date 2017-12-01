@@ -129,10 +129,10 @@ worker_processes  1;  <mark>指定有几个主进程,与实际CPU核数相同(1c
 #error_log  logs/error.log  notice;
 #error_log  logs/error.log  info;
 
-#pid        logs/nginx.pid;
+#pid        logs/nginx.pid; <mark>Nginx进程锁</mark>
 
 
-events {
+events {      <mark>Nginx处理请求的最大数量</mark>
     worker_connections  1024;
 }
 
