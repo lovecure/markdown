@@ -241,4 +241,78 @@ error_page   500 502 503 504  /50x.html; <mark>如果网站出现以上错误是
 
 </pre>
 
+<br>
+</br>
+
+### 六、Nginx配置虚拟主机(域名)
+
+<pre>
+1.创建站点目录
+mkdir -p /var/html/{www,bbs,blog}
+
+2.为每个站点创建index首页
+
+for name in www bbs blog;do echo "$name.zxx.org" > /var/html/$a/index.html;done
+</pre>
+
+<br>
+</br>
+
+<pre>
+1.配置Nginx静态配置文件
+
+vi /application/nginx/conf/nginx.conf
+
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+    sendfile       on;
+    keepalive_timeout  65;
+    server {
+        listen        80;<mark>监听端口</mark>
+        server_name   www.zxx.org; <mark>域名</mark>
+            root_name /var/html/www; <mark>站点目录</mark>
+            index     index.html index.htm; <mark>站点默认首页</mark>
+    }
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    server {
+        listen       80;
+        server_name  bbs.zxx.org;
+            root   /var/html/bbs;
+            index  index.html index.htm;
+    }
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    server {
+        listen       80;
+        server_name  blog.zxx.org;
+            root   /var/html/blog;
+            index  index.html index.htm;
+    }
+}
+
+
+
+
+
+</pre>
+
+    2.nginx -t 检查语法
+>>nginx: the configuration file /etc/nginx/nginx.conf  <mark>syntax is ok</mark>
+>>nginx: configuration file /etc/nginx/nginx.conf <mark>test is successful</mark>
+
+    3.nginx -s reload
+
 
