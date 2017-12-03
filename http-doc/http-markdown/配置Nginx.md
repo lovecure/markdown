@@ -31,7 +31,7 @@ Nginx使用不同的模块实现不同的功能,大多数软件使用模块的�
     
     2.标准模块 Core
 > 以上两个模块缺省都会安装
-> 查询模块的功能去官网:http://nginx.org/en/docs/查找
+> 查询模块的功能去官网:http://nginx.org/en/docs/    查找
    
    <br>
 </br>
@@ -66,7 +66,7 @@ tree /appliction/nginx
 ├── fastcgi_temp
 ├── html   -----><mark>默认站点目录</mark> 
 │   ├── 50x.html ----><mark>出错页面</mark>
-│   └── index.html
+│   └── index.html ----><mark>默认站点首页</mark>  
 ├── logs
 │   ├── access.log -----><mark>访问日志</mark>
 │   ├── error.log  -----><mark>错误日志</mark>
@@ -86,16 +86,16 @@ tree /appliction/nginx
 <pre>
 
 <mark>--整体是一个Main指令</mark>
-worker_processes  1; <mark>--每个配置以分号结尾</mark>--
+worker_processes  1; --每个配置<mark>以分号</mark>结尾--
 events {
     worker_connections  1024;
-} <mark>--每个模块由"{}"括起来</mark>
+} --每个模块由<mark>"{}"</mark>括起来
 http {
     include       mime.types;
     default_type  application/octet-stream;
     sendfile        on;
     keepalive_timeout  65;
-    server { <mark>--不同的模块又可以包含多个子模块</mark>
+    server { --不同的模块又可以包含<mark>多个子模块</mark>
         listen       80;
         server_name  localhost;
         location / {
@@ -117,11 +117,11 @@ http {
 ### 五、Nginx配置文件详解
 
 <pre>
-#user  nobody;  <mark>Nginx默认用户,已修改为nginx</mark>
-worker_processes  1;  <mark>指定有几个主进程,与实际CPU核数相同(1cpu,8core 2cpu=16core)
-「Nginx进程模式为一个主进程带许多子进程」</mark> 
+#user  nobody;  Nginx默认用户,<mark>已修改为nginx</mark>
+worker_processes  1;  指定有几个主进程,与<mark>实际CPU核数</mark>相同(1cpu,8core 2cpu=16core)
+<mark>「Nginx进程模式为一个主进程带许多子进程」</mark> 
 
-网站访问量请求大的时候,需要调整此参数来增加work进程
+网站访问量请求大的时候,需要调整此参数来增加worker进程
 
 
 
@@ -132,7 +132,7 @@ worker_processes  1;  <mark>指定有几个主进程,与实际CPU核数相同(1c
 #pid        logs/nginx.pid; <mark>Nginx进程锁</mark>
 
 
-events {      <mark>Nginx处理请求的最大并发连接数</mark>
+events {      <mark>Worker的连接数,</mark>Nginx处理连接请求的最数量
     worker_connections  1024;
 }
 
@@ -145,7 +145,7 @@ http {
     #                  '$status $body_bytes_sent "$http_referer" '
     #                  '"$http_user_agent" "$http_x_forwarded_for"';
 
-    #access_log  logs/access.log  main;
+    <mark> #代表未生效<---- #</mark>access_log  logs/access.log  main;
     
     sendfile        on;
     #tcp_nopush     on;
