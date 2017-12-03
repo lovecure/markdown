@@ -1,6 +1,6 @@
 
 ## 总结
--
+
 
 <br>
 </br>
@@ -102,7 +102,7 @@ http {
             index  index.html index.htm;
         }
         error_page   500 502 503 504  /50x.html;
-        location = /50x.html { --不同的模块又可以包含<mark>多个子模块</mark>
+        location = /50x.html { --不同的模块又可以包含<mark>多个子模块</mark>--
             root   html;
         }
     }
@@ -131,7 +131,7 @@ worker_processes  1;  指定有几个主进程,与<mark>实际CPU核数</mark>�
 #pid        logs/nginx.pid; <mark>Nginx进程锁</mark>
 
 
-events {      <mark>Worker的连接数,</mark>Nginx处理连接请求的最数量
+events {      <mark>Worker的连接数,</mark>Nginx处理连接请求的最大数量
     worker_connections  1024;
 }
 
@@ -302,4 +302,14 @@ http {
 
     3.nginx -s reload
 
+<br>
+</br>
+
+### 七、Nginx配置虚拟主机小结
+
+    1.复制完整的server标签段
+    2.更改server_name以及对应的root目录
+    3.检查配置文件语法,平滑重启服务
+    4.创建各网站根目录以及各网站的index文件(没有index文件则会报403错误)
+    
 
