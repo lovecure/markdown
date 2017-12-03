@@ -275,26 +275,13 @@ http {
             root_name /var/html/www; <mark>站点目录</mark>
             index     index.html index.htm; <mark>站点默认首页</mark>
     }
-}
-
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-    sendfile        on;
-    keepalive_timeout  65;
     server {
         listen       80;
         server_name  bbs.zxx.org;
             root   /var/html/bbs;
             index  index.html index.htm;
     }
-}
 
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-    sendfile        on;
-    keepalive_timeout  65;
     server {
         listen       80;
         server_name  blog.zxx.org;
@@ -304,7 +291,7 @@ http {
 }
 
 
-
+<mark>!!!注意是多个"server标签"而不是多个“http”标签!!!!</mark>
 
 
 </pre>
