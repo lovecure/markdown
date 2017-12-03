@@ -95,15 +95,14 @@ http {
     default_type  application/octet-stream;
     sendfile        on;
     keepalive_timeout  65;
-    server { --不同的模块又可以包含<mark>多个子模块</mark>
-        listen       80;
-        server_name  localhost;
-        location / {
+    server {         listen       80;
+       server_name  localhost;
+            location / {
             root   html;
             index  index.html index.htm;
         }
         error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
+        location = /50x.html { --不同的模块又可以包含<mark>多个子模块</mark>
             root   html;
         }
     }
@@ -155,25 +154,25 @@ http {
 
     #gzip  on;
 
-    server {
-        listen       80;
-        server_name  localhost;
+    server {   <mark>server是常用标签！</mark>
+       listen       80;<mark> 监听端口 </mark>
+       server_name  localhost; <mark> 域名</mark>
 
         #charset koi8-r;
 
         #access_log  logs/host.access.log  main;
 
-        location / {
+        location / { <mark>根据结果</mark>
             root   html;
             index  index.html index.htm;
-        }
+        }  <mark>执行上面的任务,URL跳转</mark>
 
         #error_page  404              /404.html;
 
         # redirect server error pages to the static page /50x.html
         #
-error_page   500 502 503 504  /50x.html;
-        location = /50x.html {
+error_page   500 502 503 504  /50x.html; <mark>如果网站出现以上错误是直接提示用户,还是转到指定错误页面,优雅提示</mark>
+        location = /50x.html { <mark>前面所提到的location标签</mark>
             root   html;
         }
 
