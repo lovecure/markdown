@@ -8,16 +8,10 @@
 </br>
 
 ### 一、Nginx默认站点位置
-     
-     nginx_install_dir/conf (没有extra目录)
-     
-     grep "html" nginx.conf : Nginx默认主页位置
-     
-     
-     /nginx_install_dir/html/ <--- Nginx默认站点位置
+    
+     /nginx_install_dir/html/ 
      
 >    Apache默认站点位置:
->>   grep "DocumentRoot" /application/apache/conf/httpd.conf
 >>   /application/apache/htdoc 
 
 <br>
@@ -65,7 +59,7 @@ tree /appliction/nginx
 │   └── win-utf
 ├── fastcgi_temp
 ├── html   -----><mark>默认站点目录</mark> 
-│   ├── 50x.html ----><mark>出错页面</mark>
+│   ├── 50x.html ----><mark>错误页面</mark>
 │   └── index.html ----><mark>默认站点首页</mark>  
 ├── logs
 │   ├── access.log -----><mark>访问日志</mark>
