@@ -2,6 +2,15 @@
 ## 总结
 
 
+    1.  Nginx 使用不同的模块实现不同的功能(Main,Core缺省安装)
+    2.  nginx.conf 是Nginx的主配置文件,logs是日志目录
+    3.  worker_processes 与cpu核心数相同,代表处理进程数,影响处理访问请求
+    4.  配置Nginx虚拟主机
+>> 1)创建站点目录以及首页文件
+>> 2)复制完整的"server"标签
+>> 3)更改server_name字段(域名)
+>> 4)更改root字段(站点目录)
+
 <br>
 </br>
 <br>
@@ -300,10 +309,11 @@ http {
 </br>
 
 ### 七、Nginx配置虚拟主机小结
-
-    1.复制完整的server标签段
-    2.更改server_name以及对应的root目录
+<pre>
+    1.复制完整的<mark>server标签段</mark>
+    2.更改server_name<mark>(域名)</mark>以及对应的root<mark>(站点)</mark>目录
     3.检查配置文件语法,平滑重启服务
     4.创建各网站根目录以及各网站的index文件(没有index文件则会报403错误)
+<pre>
     
 
