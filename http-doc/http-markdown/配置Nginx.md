@@ -255,7 +255,7 @@ mkdir -p /var/html/{www,bbs,blog}
 
 2.为每个站点创建index首页
 
-for name in www bbs blog;do echo "$name.zxx.org" > /var/html/$a/index.html;done
+for name in www bbs blog;do echo "$name.zxx.org" > /var/html/$name/index.html;done
 </pre>
 
 <br>
